@@ -1,0 +1,168 @@
+{
+  "project_info": {
+    "project_number": "714127090637",
+    "firebase_url": "https://bunkmeter-89e80.firebaseio.com",
+    "project_id": "bunkmeter-89e80",
+    "storage_bucket": "bunkmeter-89e80.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714127090637:android:16ea9a5b41310004",
+        "android_client_info": {
+          "package_name": "kk.techbytecare.attendancemanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714127090637-7g5ki4tigl6nldk9gun050tqtulbs2m4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kk.techbytecare.attendancemanagement",
+            "certificate_hash": "e7e2c01698da53d740db3ec341794e9acf386ed1"
+          }
+        },
+        {
+          "client_id": "714127090637-ep5e3pf5n0tn3buqnh810r5se17t28s0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyLkjW5Nb1Bc3F7As7Hr7mUKA0852vKL0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714127090637-ep5e3pf5n0tn3buqnh810r5se17t28s0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714127090637:android:55f545ad51810c7f",
+        "android_client_info": {
+          "package_name": "kk.techbytecare.projectattendance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714127090637-k9akgjg9g2hko36lg8ce8mhihddenhng.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kk.techbytecare.projectattendance",
+            "certificate_hash": "e7e2c01698da53d740db3ec341794e9acf386ed1"
+          }
+        },
+        {
+          "client_id": "714127090637-p8ljl1t78vvhis6acn1amm6a03g4ja61.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kk.techbytecare.projectattendance",
+            "certificate_hash": "d4636a67475654dbbd392d7a67c274ebd2213252"
+          }
+        },
+        {
+          "client_id": "714127090637-varflv5atu39jv2bdcaiv0uuvk7vfbje.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kk.techbytecare.projectattendance",
+            "certificate_hash": "f57aaeb4e7281cae9346b70072f8d3b073465128"
+          }
+        },
+        {
+          "client_id": "714127090637-ep5e3pf5n0tn3buqnh810r5se17t28s0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyLkjW5Nb1Bc3F7As7Hr7mUKA0852vKL0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714127090637-ep5e3pf5n0tn3buqnh810r5se17t28s0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-7920815986886474~9558080075"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714127090637:android:f164b99b25f68224",
+        "android_client_info": {
+          "package_name": "kk.techbytecare.students"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714127090637-tuqctjqgejefgdooq755aat99hgertvv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kk.techbytecare.students",
+            "certificate_hash": "f57aaeb4e7281cae9346b70072f8d3b073465128"
+          }
+        },
+        {
+          "client_id": "714127090637-ep5e3pf5n0tn3buqnh810r5se17t28s0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyLkjW5Nb1Bc3F7As7Hr7mUKA0852vKL0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714127090637-ep5e3pf5n0tn3buqnh810r5se17t28s0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714127090637:android:17f8e9ad9f3cb3c1095a84",
+        "android_client_info": {
+          "package_name": "tbc.uncagedmist.allgameswallpapers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714127090637-ep5e3pf5n0tn3buqnh810r5se17t28s0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyLkjW5Nb1Bc3F7As7Hr7mUKA0852vKL0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714127090637-ep5e3pf5n0tn3buqnh810r5se17t28s0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

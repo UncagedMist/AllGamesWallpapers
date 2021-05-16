@@ -14,11 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +31,6 @@ import tbc.uncagedmist.allgameswallpapers.R;
 
 @SuppressLint("ValidFragment")
 public class RecentFragment extends Fragment {
-
-    AdView aboveBanner, bottomBanner;
 
     private static RecentFragment INSTANCE = null;
 
@@ -78,14 +71,6 @@ public class RecentFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_recents);
 
-        aboveBanner = view.findViewById(R.id.aboveBanner);
-        bottomBanner = view.findViewById(R.id.bottomBanner);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        aboveBanner.loadAd(adRequest);
-        bottomBanner.loadAd(adRequest);
-
         recyclerView.setHasFixedSize(true);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2);
@@ -101,68 +86,7 @@ public class RecentFragment extends Fragment {
         else
             Toast.makeText(getContext(), "Please Connect to Internet...", Toast.LENGTH_SHORT).show();
 
-        adMethod();
         return view;
-    }
-
-    private void adMethod() {
-        aboveBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
-
-        bottomBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
     }
 
     private void loadRecents() {

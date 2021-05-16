@@ -12,6 +12,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -37,7 +41,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import org.jetbrains.annotations.NotNull;
 
-import tbc.uncagedmist.allgameswallpapers.Common.Common;
 import tbc.uncagedmist.allgameswallpapers.Fragments.CategoryFragment;
 import tbc.uncagedmist.allgameswallpapers.Fragments.FavouriteFragment;
 import tbc.uncagedmist.allgameswallpapers.Fragments.PopularFragment;
@@ -56,6 +59,8 @@ public class HomeActivity extends AppCompatActivity
     CurvedBottomNavigationView curvedBottomNavigationView;
 
     FloatingActionButton fab;
+
+    AdView aboveBanner, bottomBanner;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions,
@@ -104,6 +109,14 @@ public class HomeActivity extends AppCompatActivity
         curvedBottomNavigationView = findViewById(R.id.customBottomBar);
         fab = findViewById(R.id.fab);
 
+        aboveBanner = findViewById(R.id.aboveBanner);
+        bottomBanner = findViewById(R.id.bottomBanner);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        aboveBanner.loadAd(adRequest);
+        bottomBanner.loadAd(adRequest);
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -148,6 +161,8 @@ public class HomeActivity extends AppCompatActivity
 
         loadFragment(CategoryFragment.getInstance());
         fab.setImageResource(R.drawable.ic_baseline_games_24);
+
+        adMethod();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -173,6 +188,66 @@ public class HomeActivity extends AppCompatActivity
         else {
             exit();
         }
+    }
+
+    private void adMethod() {
+        aboveBanner.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
+
+        bottomBanner.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
     }
 
     @Override

@@ -23,6 +23,7 @@ import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.Task;
+import com.google.firebase.database.annotations.NotNull;
 import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.Icon;
@@ -38,8 +39,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
-import org.jetbrains.annotations.NotNull;
 
 import tbc.uncagedmist.allgameswallpapers.Fragments.CategoryFragment;
 import tbc.uncagedmist.allgameswallpapers.Fragments.FavouriteFragment;
@@ -168,7 +167,7 @@ public class HomeActivity extends AppCompatActivity
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
-                                    @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+                                    @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)

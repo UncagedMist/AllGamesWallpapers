@@ -9,18 +9,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.AdapterStatus;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-import tbc.uncagedmist.allgameswallpapers.R;
 import tbc.uncagedmist.allgameswallpapers.Utility.AppOpenManager;
 import tbc.uncagedmist.allgameswallpapers.Utility.MyNetworkReceiver;
 
@@ -43,16 +36,13 @@ public class MyApplicationClass extends Application {
 
         context = getApplicationContext();
 
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-                Map<String, AdapterStatus> statusMap = initializationStatus.getAdapterStatusMap();
-                for (String adapterClass : statusMap.keySet()) {
-                    AdapterStatus status = statusMap.get(adapterClass);
-                    Log.d("All Game Wallpaper", String.format(
-                            "Adapter name: %s, Description: %s, Latency: %d",
-                            adapterClass, status.getDescription(), status.getLatency()));
-                }
+        MobileAds.initialize(this, initializationStatus -> {
+            Map<String, AdapterStatus> statusMap = initializationStatus.getAdapterStatusMap();
+            for (String adapterClass : statusMap.keySet()) {
+                AdapterStatus status = statusMap.get(adapterClass);
+                Log.d("All Game Wallpaper", String.format(
+                        "Adapter name: %s, Description: %s, Latency: %d",
+                        adapterClass, status.getDescription(), status.getLatency()));
             }
         });
 

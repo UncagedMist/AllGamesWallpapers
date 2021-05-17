@@ -16,8 +16,6 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Date;
 
 import tbc.uncagedmist.allgameswallpapers.Common.MyApplicationClass;
@@ -55,11 +53,6 @@ public class AppOpenManager implements LifecycleObserver, Application.ActivityLi
 
         loadCallback =
                 new AppOpenAd.AppOpenAdLoadCallback() {
-                    /**
-                     * Called when an app open ad has loaded.
-                     *
-                     * @param ad the loaded app open ad.
-                     */
                     @Override
                     public void onAdLoaded(AppOpenAd ad) {
                         AppOpenManager.this.appOpenAd = ad;

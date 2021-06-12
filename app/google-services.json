@@ -161,6 +161,36 @@
             }
           ]
         }
+      },
+      "admob_app_id": "ca-app-pub-7920815986886474~1780164884"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714127090637:android:ec803d501ed6e005095a84",
+        "android_client_info": {
+          "package_name": "tbc.uncagedmist.paidgameswallpapers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714127090637-ep5e3pf5n0tn3buqnh810r5se17t28s0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyLkjW5Nb1Bc3F7As7Hr7mUKA0852vKL0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714127090637-ep5e3pf5n0tn3buqnh810r5se17t28s0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
       }
     }
   ],

@@ -8,14 +8,22 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.adcolony.sdk.AdColony;
 import com.adcolony.sdk.AdColonyAppOptions;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.AdapterStatus;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Map;
 
+import tbc.uncagedmist.allgameswallpapers.MainActivity;
+import tbc.uncagedmist.allgameswallpapers.R;
 import tbc.uncagedmist.allgameswallpapers.Utility.AppOpenManager;
 import tbc.uncagedmist.allgameswallpapers.Utility.MyNetworkReceiver;
 
@@ -56,6 +64,7 @@ public class MyApplicationClass extends Application {
         });
 
         appOpenManager = new AppOpenManager(this);
+
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override

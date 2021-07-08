@@ -36,7 +36,7 @@
         ads:adSize="BANNER"
         ads:adUnitId="@string/BANNER_ID" />
 
-    <tbc.uncagedmist.allgameswallpapers.Utility.CurvedBottomNavigationView
+    <tbc.uncagedmist.mobilewallpapers.Utility.CurvedBottomNavigationView
         android:layout_gravity="bottom"
         android:id="@+id/customBottomBar"
         android:layout_width="match_parent"

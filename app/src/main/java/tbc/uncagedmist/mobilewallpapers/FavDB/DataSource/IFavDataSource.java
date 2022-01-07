@@ -5,7 +5,6 @@ import java.util.List;
 import io.reactivex.Flowable;
 import tbc.uncagedmist.mobilewallpapers.FavDB.Favourites;
 
-
 public interface IFavDataSource {
     Flowable<List<Favourites>> getAllFavourites();
     void insertFav(Favourites...favourites);

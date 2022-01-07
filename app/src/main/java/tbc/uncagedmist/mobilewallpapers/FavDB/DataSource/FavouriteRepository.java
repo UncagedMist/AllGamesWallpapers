@@ -1,6 +1,5 @@
 package tbc.uncagedmist.mobilewallpapers.FavDB.DataSource;
 
-
 import java.util.List;
 
 import io.reactivex.Flowable;

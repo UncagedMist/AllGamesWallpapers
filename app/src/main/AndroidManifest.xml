@@ -19,11 +19,6 @@
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config">
 
-        <activity android:name=".ViewWallpaperActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ListWallpaperActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".HomeActivity"
             android:screenOrientation="portrait" />
@@ -34,7 +29,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,7 +46,8 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".Utility.MyNetworkReceiver">
+        <receiver android:name=".Utility.MyNetworkReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>

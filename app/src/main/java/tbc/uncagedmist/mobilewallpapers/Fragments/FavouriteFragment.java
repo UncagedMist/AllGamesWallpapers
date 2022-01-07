@@ -20,12 +20,12 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import tbc.uncagedmist.mobilewallpapers.Adapter.MyFavAdapter;
+import tbc.uncagedmist.mobilewallpapers.Adapter.FavouriteAdapter;
 import tbc.uncagedmist.mobilewallpapers.Common.Common;
 import tbc.uncagedmist.mobilewallpapers.FavDB.DataSource.FavouriteRepository;
 import tbc.uncagedmist.mobilewallpapers.FavDB.Favourites;
+import tbc.uncagedmist.mobilewallpapers.FavDB.LocalDB.FavouriteDatabase;
 import tbc.uncagedmist.mobilewallpapers.FavDB.LocalDB.FavouritesDataSource;
-import tbc.uncagedmist.mobilewallpapers.FavDB.LocalDB.LocalDatabase;
 import tbc.uncagedmist.mobilewallpapers.R;
 
 @SuppressLint("ValidFragment")
@@ -36,7 +36,7 @@ public class FavouriteFragment extends Fragment {
     RecyclerView recyclerView;
 
     List<Favourites> favouritesList;
-    MyFavAdapter adapter;
+    FavouriteAdapter adapter;
 
     Context context;
 
@@ -48,11 +48,8 @@ public class FavouriteFragment extends Fragment {
         this.context = context;
 
         compositeDisposable = new CompositeDisposable();
-        LocalDatabase database = LocalDatabase.getInstance(context);
+        FavouriteDatabase database = FavouriteDatabase.getInstance(context);
         favouriteRepository = FavouriteRepository.getInstance(FavouritesDataSource.getInstance(database.favouritesDAO()));
-    }
-
-    public FavouriteFragment() {
     }
 
     public static FavouriteFragment getInstance(Context context)    {
@@ -77,7 +74,7 @@ public class FavouriteFragment extends Fragment {
 
         favouritesList = new ArrayList<>();
 
-        adapter = new MyFavAdapter(context,favouritesList);
+        adapter = new FavouriteAdapter(context,favouritesList);
         recyclerView.setAdapter(adapter);
 
         if (Common.isConnectedToInternet(getContext()))

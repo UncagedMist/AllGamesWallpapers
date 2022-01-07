@@ -21,12 +21,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import tbc.uncagedmist.mobilewallpapers.Adapter.MyRecyclerAdapter;
+import tbc.uncagedmist.mobilewallpapers.Adapter.RecentAdapter;
 import tbc.uncagedmist.mobilewallpapers.Common.Common;
-import tbc.uncagedmist.mobilewallpapers.Database.DataSource.RecentsRepository;
-import tbc.uncagedmist.mobilewallpapers.Database.LocalDatabase.LocalDatabase;
-import tbc.uncagedmist.mobilewallpapers.Database.LocalDatabase.RecentsDataSource;
-import tbc.uncagedmist.mobilewallpapers.Database.Recents;
+import tbc.uncagedmist.mobilewallpapers.RecentDB.DataSource.RecentRepository;
+import tbc.uncagedmist.mobilewallpapers.RecentDB.LocalDatabase.RecentDatabase;
+import tbc.uncagedmist.mobilewallpapers.RecentDB.LocalDatabase.RecentDataSource;
+import tbc.uncagedmist.mobilewallpapers.RecentDB.Recent;
 import tbc.uncagedmist.mobilewallpapers.R;
 
 @SuppressLint("ValidFragment")
@@ -36,25 +36,23 @@ public class RecentFragment extends Fragment {
 
     RecyclerView recyclerView;
 
-    List<Recents> recentsList;
-    MyRecyclerAdapter adapter;
+    List<Recent> recentList;
+    RecentAdapter adapter;
 
     Context context;
 
     CompositeDisposable compositeDisposable;
-    RecentsRepository recentsRepository;
+    RecentRepository recentsRepository;
 
     @SuppressLint("ValidFragment")
     public RecentFragment(Context context) {
         this.context = context;
 
         compositeDisposable = new CompositeDisposable();
-        LocalDatabase database = LocalDatabase.getInstance(context);
-        recentsRepository = RecentsRepository.getInstance(RecentsDataSource.getInstance(database.recentDAO()));
+        RecentDatabase database = RecentDatabase.getInstance(context);
+        recentsRepository = RecentRepository.getInstance(RecentDataSource.getInstance(database.recentDAO()));
     }
 
-    public RecentFragment() {
-    }
 
     public static RecentFragment getInstance(Context context)    {
 
@@ -76,33 +74,33 @@ public class RecentFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        recentsList = new ArrayList<>();
+        recentList = new ArrayList<>();
 
-        adapter = new MyRecyclerAdapter(context,recentsList);
+        adapter = new RecentAdapter(context, recentList);
         recyclerView.setAdapter(adapter);
 
         if (Common.isConnectedToInternet(getContext()))
-            loadRecents();
+            loadRecent();
         else
             Toast.makeText(getContext(), "Please Connect to Internet...", Toast.LENGTH_SHORT).show();
 
         return view;
     }
 
-    private void loadRecents() {
-        Disposable disposable = recentsRepository.getAllRecents()
+    private void loadRecent() {
+        Disposable disposable = recentsRepository.getAllRecent()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(recents ->
-                        onGetAllRecentsSuccess(recents),
+                .subscribe(recent ->
+                        onGetAllRecentSuccess(recent),
                         throwable ->
                         Log.d("ERROR", throwable.getMessage()));
         compositeDisposable.add(disposable);
     }
 
-    private void onGetAllRecentsSuccess(List<Recents> recents) {
-        recentsList.clear();
-        recentsList.addAll(recents);
+    private void onGetAllRecentSuccess(List<Recent> recent) {
+        recentList.clear();
+        recentList.addAll(recent);
         adapter.notifyDataSetChanged();
     }
 

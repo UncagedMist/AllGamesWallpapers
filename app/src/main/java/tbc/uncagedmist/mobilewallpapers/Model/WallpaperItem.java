@@ -2,19 +2,29 @@ package tbc.uncagedmist.mobilewallpapers.Model;
 
 public class WallpaperItem {
 
+    public String imageId;
     public String imageUrl;
-    public String categoryId;
+    public String desc;
     public long viewCount;
     public long downloadCount;
 
     public WallpaperItem() {
     }
 
-    public WallpaperItem(String imageUrl, String categoryId, long viewCount, long downloadCount) {
+    public WallpaperItem(String imageId, String imageUrl, String desc, long viewCount, long downloadCount) {
+        this.imageId = imageId;
         this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
+        this.desc = desc;
         this.viewCount = viewCount;
         this.downloadCount = downloadCount;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 
     public String getImageUrl() {
@@ -25,12 +35,12 @@ public class WallpaperItem {
         this.imageUrl = imageUrl;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public long getViewCount() {

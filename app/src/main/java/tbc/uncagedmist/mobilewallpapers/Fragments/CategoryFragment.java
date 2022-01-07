@@ -1,14 +1,17 @@
 package tbc.uncagedmist.mobilewallpapers.Fragments;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,111 +19,100 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import tbc.uncagedmist.mobilewallpapers.Ads.GoogleAds;
 import tbc.uncagedmist.mobilewallpapers.Common.Common;
-import tbc.uncagedmist.mobilewallpapers.ListWallpaperActivity;
-import tbc.uncagedmist.mobilewallpapers.Model.CategoryItem;
+import tbc.uncagedmist.mobilewallpapers.Common.MyApplicationClass;
+import tbc.uncagedmist.mobilewallpapers.Model.WallpaperItem;
 import tbc.uncagedmist.mobilewallpapers.R;
-import tbc.uncagedmist.mobilewallpapers.ViewHolder.CategoryViewHolder;
+import tbc.uncagedmist.mobilewallpapers.ViewHolder.WallpaperViewHolder;
 
 public class CategoryFragment extends Fragment {
 
     FirebaseDatabase database;
     DatabaseReference categoryBackground;
 
-    FirebaseRecyclerOptions<CategoryItem> options;
-    FirebaseRecyclerAdapter<CategoryItem, CategoryViewHolder> adapter;
+    FirebaseRecyclerOptions<WallpaperItem> options;
+    FirebaseRecyclerAdapter<WallpaperItem, WallpaperViewHolder> adapter;
 
+    @SuppressLint("StaticFieldLeak")
     private static CategoryFragment INSTANCE = null;
 
     RecyclerView recyclerView;
 
-    private InterstitialAd mInterstitialAd;
+    Context context;
+
+    @Override
+    public void onAttach(@NonNull Activity activity) {
+        context = activity;
+        super.onAttach(activity);
+    }
 
     public CategoryFragment() {
         database = FirebaseDatabase.getInstance();
-        categoryBackground = database.getReference(Common.STR_CATEGORY_BACKGROUND);
+        categoryBackground = database.getReference(Common.FB_DB_NAME);
 
-        options = new FirebaseRecyclerOptions.Builder<CategoryItem>()
-                .setQuery(categoryBackground,CategoryItem.class)
+        options = new FirebaseRecyclerOptions.Builder<WallpaperItem>()
+                .setQuery(categoryBackground,WallpaperItem.class)
                 .build();
 
-        adapter = new FirebaseRecyclerAdapter<CategoryItem, CategoryViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<WallpaperItem, WallpaperViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position, @NonNull final CategoryItem model) {
+            protected void onBindViewHolder(@NonNull WallpaperViewHolder holder, int position, @NonNull WallpaperItem model) {
 
+                holder.progressBar.setVisibility(View.VISIBLE);
                 Picasso.get()
-                        .load(model.getImageLink())
-                        .into(holder.background_image);
+                        .load(model.getImageUrl())
+                        .into(holder.background_image, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                holder.progressBar.setVisibility(View.GONE);
+                            }
 
-                holder.category_name.setText(model.getName());
+                            @Override
+                            public void onError(Exception e) {
+                                Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
                 holder.setItemClickListener((view, position1) -> {
-                    if (mInterstitialAd != null) {
-                        mInterstitialAd.show(getActivity());
+                    if (GoogleAds.mInterstitialAd != null) {
+                        GoogleAds.mInterstitialAd.show((Activity) context);
                     }
                     else {
-                        Common.CATEGORY_ID_SELECTED = adapter.getRef(position1).getKey();
-                        Common.CATEGORY_SELECTED = model.getName();
-                        Common.Current_Description = model.getDesc();
-                        startActivity(new Intent(getActivity(), ListWallpaperActivity.class));
+                        ViewWallpaperFragment viewWallpaperFragment = new ViewWallpaperFragment();
+                        FragmentTransaction transaction = ((AppCompatActivity)context)
+                                .getSupportFragmentManager().beginTransaction();
+
+                        Common.selected_background = model;
+                        Common.selected_background_key = adapter.getRef(position).getKey();
+
+                        transaction.replace(R.id.main_frame,viewWallpaperFragment).commit();
                     }
                 });
-
             }
 
             @NonNull
             @Override
-            public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public WallpaperViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.layout_category_item,parent,false);
+                        .inflate(R.layout.layout_wallpaper_item,parent,false);
 
-                AdRequest adRequest = new AdRequest.Builder().build();
+                if (MyApplicationClass.getInstance().isShowAds())   {
+                    GoogleAds.loadGoogleFullscreen(context);
+                }
 
-                InterstitialAd.load(
-                        getContext(),
-                        getContext().getString(R.string.FULL_SCREEN),
-                        adRequest, new InterstitialAdLoadCallback() {
-                            @Override
-                            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                                mInterstitialAd = interstitialAd;
-
-                                mInterstitialAd.setFullScreenContentCallback(
-                                        new FullScreenContentCallback(){
-                                    @Override
-                                    public void onAdDismissedFullScreenContent() {
-                                        Log.d("TAG", "The ad was dismissed.");
-                                    }
-
-                                    @Override
-                                    public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                        Log.d("TAG", "The ad failed to show.");
-                                    }
-
-                                    @Override
-                                    public void onAdShowedFullScreenContent() {
-                                        mInterstitialAd = null;
-                                        Log.d("TAG", "The ad was shown.");
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                                mInterstitialAd = null;
-                            }
-                        });
-
-                return new CategoryViewHolder(itemView);
+                return new WallpaperViewHolder(itemView);
             }
         };
     }
@@ -142,11 +134,12 @@ public class CategoryFragment extends Fragment {
 
         recyclerView.setHasFixedSize(true);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context,2);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        if (Common.isConnectedToInternet(getContext()))
+        if (Common.isConnectedToInternet(context)) {
             setCategory();
+        }
         else
             Toast.makeText(getContext(), "Please Connect to Internet...", Toast.LENGTH_SHORT).show();
 
@@ -176,7 +169,6 @@ public class CategoryFragment extends Fragment {
             adapter.startListening();
         }
     }
-
 
     @Override
     public void onDestroy() {

@@ -1,61 +1,47 @@
 package tbc.uncagedmist.mobilewallpapers.Common;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.adcolony.sdk.AdColony;
-import com.adcolony.sdk.AdColonyAppOptions;
+import com.facebook.ads.AudienceNetworkAds;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.AdapterStatus;
-
-import java.util.Map;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import tbc.uncagedmist.mobilewallpapers.Utility.AppOpenManager;
 import tbc.uncagedmist.mobilewallpapers.Utility.MyNetworkReceiver;
 
 public class MyApplicationClass extends Application {
 
-    private static Context context;
-
-    private static AppOpenManager appOpenManager;
-
+    @SuppressLint("StaticFieldLeak")
     public static Activity mActivity;
     MyNetworkReceiver mNetworkReceiver;
 
-    public static final String APP_ID = "appbe78c3a891f04ae487";
-    public static final String ZONE_ID = "vzc31add9f02f545348d";
+    @SuppressLint("StaticFieldLeak")
+    private static MyApplicationClass instance;
 
-    public static Context getContext() {
-        return context;
-    }
+    private boolean showAds = true;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
 
-        context = getApplicationContext();
-
-        AdColonyAppOptions appOptions = new AdColonyAppOptions();
-
-        AdColony.configure(this, appOptions, APP_ID, ZONE_ID);
-
-        MobileAds.initialize(this, initializationStatus -> {
-            Map<String, AdapterStatus> statusMap = initializationStatus.getAdapterStatusMap();
-            for (String adapterClass : statusMap.keySet()) {
-                AdapterStatus status = statusMap.get(adapterClass);
-                Log.d("All Game Wallpaper", String.format(
-                        "Adapter name: %s, Description: %s, Latency: %d",
-                        adapterClass, status.getDescription(), status.getLatency()));
-            }
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) { }
         });
 
-        appOpenManager = new AppOpenManager(this);
+        AudienceNetworkAds.initialize(this);
+
+        if (showAds)    {
+            AppOpenManager appOpenManager = new AppOpenManager(instance);
+        }
 
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
@@ -98,9 +84,22 @@ public class MyApplicationClass extends Application {
         });
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     private void registerNetworkBroadcastForLollipop() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
+    }
+
+    public static MyApplicationClass getInstance() {
+        return instance;
+    }
+
+    public boolean isShowAds() {
+        return showAds;
+    }
+
+    public void setShowAds(boolean showAds) {
+        this.showAds = showAds;
     }
 }

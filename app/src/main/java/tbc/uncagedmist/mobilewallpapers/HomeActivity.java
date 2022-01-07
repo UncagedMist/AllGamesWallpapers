@@ -7,13 +7,17 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -40,15 +44,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import tbc.uncagedmist.mobilewallpapers.Common.MyApplicationClass;
 import tbc.uncagedmist.mobilewallpapers.Fragments.CategoryFragment;
 import tbc.uncagedmist.mobilewallpapers.Fragments.FavouriteFragment;
 import tbc.uncagedmist.mobilewallpapers.Fragments.PopularFragment;
 import tbc.uncagedmist.mobilewallpapers.Fragments.RecentFragment;
-import tbc.uncagedmist.mobilewallpapers.Fragments.SettingsFragment;
 import tbc.uncagedmist.mobilewallpapers.Utility.CurvedBottomNavigationView;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity {
 
     ReviewManager manager;
     ReviewInfo reviewInfo;
@@ -59,7 +62,9 @@ public class HomeActivity extends AppCompatActivity
 
     FloatingActionButton fab;
 
-    AdView aboveBanner, bottomBanner;
+    private FrameLayout adContainerView;
+    private AdView adView;
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions,
@@ -108,22 +113,15 @@ public class HomeActivity extends AppCompatActivity
         curvedBottomNavigationView = findViewById(R.id.customBottomBar);
         fab = findViewById(R.id.fab);
 
-        aboveBanner = findViewById(R.id.aboveBanner);
-        bottomBanner = findViewById(R.id.bottomBanner);
+        adContainerView = findViewById(R.id.ad_container);
+        // Step 1 - Create an AdView and set the ad unit ID on it.
+        adView = new AdView(this);
+        adView.setAdUnitId(getString(R.string.BANNER_ID));
+        adContainerView.addView(adView);
 
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        aboveBanner.loadAd(adRequest);
-        bottomBanner.loadAd(adRequest);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView =  findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        if (MyApplicationClass.getInstance().isShowAds())   {
+            loadBanner();
+        }
 
         curvedBottomNavigationView.setSelectedItemId(R.id.action_category);
 
@@ -141,7 +139,7 @@ public class HomeActivity extends AppCompatActivity
                 }
                 else if (item.getItemId() == R.id.action_trending) {
                     getSupportActionBar().setTitle("Trending");
-                    fragment = new PopularFragment();
+                    fragment = new PopularFragment(getApplicationContext());
                     fab.setImageResource(R.drawable.ic_baseline_stream_24);
                 }
                 else if (item.getItemId() == R.id.action_recent) {
@@ -160,8 +158,6 @@ public class HomeActivity extends AppCompatActivity
 
         loadFragment(CategoryFragment.getInstance());
         fab.setImageResource(R.drawable.ic_baseline_games_24);
-
-        adMethod();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -180,150 +176,26 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        }
-        else {
-            new FancyAlertDialog.Builder(HomeActivity.this)
-                    .setTitle("Resident Evil Village Wallpaper")
-                    .setBackgroundColor(Color.parseColor("#303F9F"))  //Don't pass R.color.colorvalue
-                    .setMessage("Support us by downloading our other apps!")
-                    .setNegativeBtnText("Don't")
-                    .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
-                    .setPositiveBtnText("Support")
-                    .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
-                    .setAnimation(Animation.POP)
-                    .isCancellable(true)
-                    .setIcon(R.drawable.ic_star_border_black_24dp, Icon.Visible)
-                    .OnPositiveClicked(() ->
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.paidgameswallpapers"))))
-                    .OnNegativeClicked(() -> {
-                    })
-                    .build();
-        }
+        new FancyAlertDialog.Builder(HomeActivity.this)
+                .setTitle("Resident Evil Village Wallpaper")
+                .setBackgroundColor(Color.parseColor("#303F9F"))  //Don't pass R.color.colorvalue
+                .setMessage("Support us by downloading our other apps!")
+                .setNegativeBtnText("Don't")
+                .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText("Support")
+                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
+                .setAnimation(Animation.POP)
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_star_border_black_24dp, Icon.Visible)
+                .OnPositiveClicked(() ->
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=tbc.uncagedmist.paidgameswallpapers"))))
+                .OnNegativeClicked(() -> {
+                })
+                .build();
     }
 
-    private void adMethod() {
-        aboveBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
 
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
 
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
-
-        bottomBanner.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            CategoryFragment categoryFragment = new CategoryFragment();
-            transaction.replace(R.id.main_frame,categoryFragment);
-            getSupportActionBar().setTitle(R.string.app_name);
-            fab.setImageResource(R.drawable.ic_baseline_games_24);
-        }
-        else if (id == R.id.nav_fav)   {
-            FavouriteFragment favoriteFragment = new FavouriteFragment(getApplicationContext());
-            transaction.replace(R.id.main_frame,favoriteFragment);
-            getSupportActionBar().setTitle("Favourites");
-            fab.setImageResource(R.drawable.ic_baseline_favorite_border_24);
-        }
-        else if (id == R.id.nav_settings) {
-            SettingsFragment settingsFragment = new SettingsFragment();
-            transaction.replace(R.id.main_frame,settingsFragment);
-            getSupportActionBar().setTitle("Settings");
-            fab.setImageResource(R.drawable.ic_baseline_settings_suggest_24);
-        }
-        else if (id == R.id.nav_share)   {
-            fab.setImageResource(R.drawable.ic_baseline_share_24);
-            shareApp();
-        }
-        else if (id == R.id.nav_feed) {
-            fab.setImageResource(R.drawable.ic_baseline_feedback_24);
-            feedback();
-        }
-        else if (id == R.id.nav_exit) {
-            fab.setImageResource(R.drawable.ic_baseline_exit_to_app_24);
-            exit();
-        }
-        transaction.addToBackStack(null);
-        transaction.commit();
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private void feedback() {
-        Task<ReviewInfo> request = manager.requestReviewFlow();
-
-        request.addOnCompleteListener(task -> {
-            if (task.isSuccessful())    {
-                reviewInfo = task.getResult();
-
-                Task<Void> flow = manager.launchReviewFlow(HomeActivity.this,reviewInfo);
-
-                flow.addOnSuccessListener(result -> {
-                });
-            }
-            else {
-                Toast.makeText(HomeActivity.this, "ERROR...", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void shareApp() {
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -363,5 +235,35 @@ public class HomeActivity extends AppCompatActivity
             return true;
         }
         return false;
+    }
+
+    private void loadBanner() {
+
+        AdRequest adRequest =
+                new AdRequest.Builder()
+                        .build();
+
+        AdSize adSize = getAdSize();
+        // Step 4 - Set the adaptive ad size on the ad view.
+        adView.setAdSize(adSize);
+
+
+        // Step 5 - Start loading the ad in the background.
+        adView.loadAd(adRequest);
+    }
+
+    private AdSize getAdSize() {
+        // Step 2 - Determine the screen width (less decorations) to use for the ad width.
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+
+        float widthPixels = outMetrics.widthPixels;
+        float density = outMetrics.density;
+
+        int adWidth = (int) (widthPixels / density);
+
+        // Step 3 - Get adaptive ad size and return for setting on the ad view.
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
     }
 }
